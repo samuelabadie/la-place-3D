@@ -1,4 +1,6 @@
 import * as THREE from 'three';
+import { FontLoader } from 'three/addons/loaders/FontLoader.js';
+import {TextGeometry} from 'three/addons/geometries/TextGeometry.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import GUI from 'lil-gui';
@@ -19,6 +21,7 @@ const sizes = {
     width: window.innerWidth,
     height: window.innerHeight,
 };
+
 
 window.addEventListener('resize', () => {
     // Update sizes
@@ -55,6 +58,41 @@ controls.minAzimuthAngle = -Math.PI / 6;
 controls.maxAzimuthAngle = Math.PI / 36;
 
 controls.update();
+
+
+const fontPath  = './font.json';
+const fontLoader = new FontLoader()
+fontLoader.load(
+    fontPath,
+    (font) => {
+        const textGeometry = new TextGeometry(
+            'Garcia 12',
+            {
+                font: font,
+                size: 0.5,
+                height: 0.1,
+                curveSegments: 6,
+                bevelEnabled: true,
+                bevelThickness: 0.03,
+                bevelSize: 0.02,
+                bevelOffset: 0,
+                bevelSegments: 4
+            }
+        )
+        textGeometry.computeBoundingBox()
+        textGeometry.center()
+        const textMaterial = new THREE.MeshMatcapMaterial({
+            color: 0xffffff,
+        })
+        
+        const text = new THREE.Mesh(textGeometry, textMaterial)
+
+        text.position.set(-4, 4, 2);
+        text.scale.set(0.5, 0.5, 0.5); 
+        scene.add(text)
+        console.log('font loaded successfully')
+    }
+);
 
 /**
  * Lights
