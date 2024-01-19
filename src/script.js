@@ -3,6 +3,7 @@ import { FontLoader } from 'three/addons/loaders/FontLoader.js';
 import {TextGeometry} from 'three/addons/geometries/TextGeometry.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import { TweenMax } from 'gsap';
 import GUI from 'lil-gui';
 
 // Debug
@@ -136,17 +137,19 @@ sceneLoader.load(
 
 const cigarLoader = new GLTFLoader();
 
+let cigar;
+
 cigarLoader.load(
     '/models/Cigar/cigare.glb',
     (gltf) => {
-        const cigar = gltf.scene.children[0];
+        cigar = gltf.scene.children[0];
 
         if (cigar) {
             cigar.castShadow = true;
             scene.add(cigar);
             cigar.position.set(-2, 3.2, 1);
             cigar.scale.set(0.08, 0.4, 0.08);
-            cigar.rotation.x = Math.PI / 0.7;
+            cigar.rotation.x = Math.PI / 0.1;
 
             // Set the target of the controls to the position of the cigar
             controls.target.copy(cigar.position);
@@ -182,6 +185,14 @@ window.addEventListener('dblclick', () =>
         {
             document.webkitExitFullscreen()
         }
+    }
+})
+
+window.addEventListener('click', () =>
+{
+    if (cigar) {
+        // Use GSAP to rotate the cigar two times (720 degrees) over a duration of 2 seconds
+        TweenMax.to(cigar.rotation, 0.3, { y: cigar.rotation.y + Math.PI * 2 });
     }
 })
 
